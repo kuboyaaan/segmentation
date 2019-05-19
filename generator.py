@@ -1,6 +1,28 @@
 from .coder import mask_as_image, rle_decode, rle_encode, masks_as_image
 
 class DataGenerator(Sequence):
+    #物体検知タスク用
+    def make_image_gen(dataset_info, batch_size=BATCH_SIZE, train_img_dir):
+        all_batches = list(dataset_info.groupby('ID'))
+        out_rgb = []
+        out_mask = []
+        while True:
+            np.random.shuffle(all_batches)
+            for c_img_id, c_masks in all_batches:
+                rgb_path = os.path.join(train_img_dir, c_img_id)
+                c_img = imread(rgb_path)
+                c_mask = np.expand_dims(masks_as_image(c_masks['AnnotationPixels'].values), -1)
+            if IMG_SCALING is not None:
+                c_img = c_img[::IMG_SCALING[0], ::IMG_SCALING[1]]
+                c_mask = c_mask[::IMG_SCALING[0], ::IMG_SCALING[1]]
+                
+            out_rgb += [c_img]
+            out_mask += [c_mask]
+            if len(out_rgb)>=batch_size:
+                yield np.stack(out_rgb, 0)/255.0, np.stack(out_mask, 0)
+                out_rgb, out_mask=[], []
+    
+    #画像分類タスク
     #mix_up関数
     def mix_up(x, y):
         x = np.array(x, np.float32)
@@ -77,24 +99,6 @@ class DataGenerator(Sequence):
         image_aug = augment_img.augment_image(image)
         return image_aug
     
-    def make_image_gen(dataset_info, batch_size=BATCH_SIZE, train_img_dir):
-        all_batches = list(dataset_info.groupby('ID'))
-        out_rgb = []
-        out_mask = []
-        while True:
-            np.random.shuffle(all_batches)
-            for c_img_id, c_masks in all_batches:
-                rgb_path = os.path.join(train_img_dir, c_img_id)
-                c_img = imread(rgb_path)
-                c_mask = np.expand_dims(masks_as_image(c_masks['AnnotationPixels'].values), -1)
-            if IMG_SCALING is not None:
-                c_img = c_img[::IMG_SCALING[0], ::IMG_SCALING[1]]
-                c_mask = c_mask[::IMG_SCALING[0], ::IMG_SCALING[1]]
-                
-            out_rgb += [c_img]
-            out_mask += [c_mask]
-            if len(out_rgb)>=batch_size:
-                yield np.stack(out_rgb, 0)/255.0, np.stack(out_mask, 0)
-                out_rgb, out_mask=[], []
+    
                 
             
