@@ -11,5 +11,5 @@
 <p>物体検知モデル(U-Net)と画像分類モデル(ResNetのfine-tuning)を記述．<br>
   物体検知のみ、fit, show_loss, prediction関数を記述</p>
 <h1>generator.py</h1>
-<p>datageneratorを記述(物体検知では、)</p>
+<p>datageneratorを記述(物体検知では、make_image_gen関数のみ使用)</p>
 <p>その他のメソッド：画像分類を行った際、画像サイズ指定して読み込み学習を行うと、縦横比がバラバラなデータは間延びしたような（ぼやけた）画像での学習になってしまうという問題があったため、縦横比を保ち、周りを0でpaddingして正方形の画像を生成する必要があったため作成．</p>
