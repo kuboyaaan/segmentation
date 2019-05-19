@@ -1,5 +1,9 @@
 from keras_applications import imagenet_utils as utils
 from keras import models, layers
+
+NET_SCALING=(1, 1)
+GAUSSIAN_NOISE=0.1
+EDGE_CROP=16
 #物体検知(segmentation)用
 def upsample_conv(filters, kernel_size, strides, padding):
     return layers.Conv2DTranspose(filters, kernel_size, strides=strides, padding=padding)
