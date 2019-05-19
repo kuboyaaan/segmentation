@@ -44,17 +44,17 @@ def main():
     mask_df = pd.read_csv(sample_dir + 'mask.csv')
 
 
-    dg_args = dict(featurewise_center=False,
-                   samplewise_center=False,
-                   rotation_range=45,
-                   width_shift_range=0.1,
-                   height_shift_range=0.1,
-                   shear_range=0.01,
-                   zoom_range=[0.9, 1.25],
-                   horizontal_flip=True,
-                   vertical_flip=True,
-                   fill_mode='refrect',
-                   data_format='channels_last')
+    dg_args = dict('featurewise_center'=False,
+                   'samplewise_center'=False,
+                   'rotation_range'=45,
+                   'width_shift_range'=0.1,
+                   'height_shift_range'=0.1,
+                   'shear_range'=0.01,
+                   'zoom_range'=[0.9, 1.25],
+                   'horizontal_flip'=True,
+                   'vertical_flip'=True,
+                   'fill_mode'='refrect',
+                   'data_format'='channels_last')
 
     #IMAGE:AUGMENT_BRIGHTNESS=True
     if AUGMENT_BRIGHTNESS:
